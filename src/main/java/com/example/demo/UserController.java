@@ -13,13 +13,13 @@ public class UserController {
     Map<Integer, User> idToUser = new HashMap<>();
 
 
-    @PostMapping("/users")
+    @PostMapping("/users/addUser")
     public User addName( @RequestBody User user) {
         idToUser.put(user.id, user);
         return user;
     }
 
-    @PutMapping("users/updateUser")
+    @PutMapping("/users/updateUser")
     public User updateUser(@RequestBody User user){
         idToUser.replace(user.id, user);
         return user;
@@ -36,7 +36,7 @@ public class UserController {
         return idToUser.get(id);
     }
 
-    @DeleteMapping("users/deleteUser")
+    @DeleteMapping("/users/deleteUser")
     public void deleteUser(@PathParam("id") Integer id) {
         idToUser.remove(id);
     }
