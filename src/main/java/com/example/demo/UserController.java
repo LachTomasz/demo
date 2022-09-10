@@ -2,7 +2,6 @@ package com.example.demo;
 
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,35 +11,30 @@ public class UserController {
 
     Map<Integer, User> idToUser = new HashMap<>();
 
-
-    @PostMapping("/users/addUser")
-    public User addName( @RequestBody User user) {
+    @PostMapping("/users") //to do poprawne sciezki do endpoins "/users" we wszystkich endpoints
+    public User addName(@RequestBody User user) {
         idToUser.put(user.id, user);
         return user;
     }
 
-    @PutMapping("/users/updateUser")
-    public User updateUser(@RequestBody User user){
+    @PutMapping("/users")
+    public User updateUser(@RequestBody User user) {
         idToUser.replace(user.id, user);
         return user;
     }
 
-
-    @GetMapping("/users/getAllUsers")
+    @GetMapping("/users")
     public Collection<User> getAllUsers() {
         return idToUser.values();
     }
 
-    @GetMapping("/users/getUser")
-    public User getUser(@PathParam("id") Integer id) {
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable("id") Integer id) {
         return idToUser.get(id);
     }
 
-    @DeleteMapping("/users/deleteUser")
-    public void deleteUser(@PathParam("id") Integer id) {
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable("id") Integer id) {
         idToUser.remove(id);
     }
-
-
-
 }
