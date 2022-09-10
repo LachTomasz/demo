@@ -9,6 +9,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 //import org.springframework.web.bind.annotation.*;
 //
 //import javax.websocket.server.PathParam;
@@ -37,7 +41,6 @@ class UserControllerTest {
         //Then
         Assertions.assertTrue(result.getStatusCode().is2xxSuccessful());
         Assertions.assertEquals(result.getBody(), user1);
-
     }
 
     @Test
@@ -74,7 +77,6 @@ class UserControllerTest {
         //Then
         Assertions.assertTrue(result.getStatusCode().is2xxSuccessful());
         Assertions.assertArrayEquals(result.getBody(), users);
-//        Assertions.assertEquals(result.getBody().length, 3);
     }
 
     @Test
@@ -97,8 +99,8 @@ class UserControllerTest {
     @Test
     public void shouldDeleteUser() {
         //Given
-        String urlCreated = "http://localhost:" + port + "/user";
-        String urlDelete = "http://localhost:" + port + "/user/1";
+        String urlCreated = "http://localhost:" + port + "/users";
+        String urlDelete = "http://localhost:" + port + "/users/1";
         User user1 = new User(1, "Paulina");
         restTemplate.postForEntity(urlCreated, user1, User.class);
 
@@ -107,9 +109,28 @@ class UserControllerTest {
 //        restTemplate.delete(urlDelete, user1);
 
         //Then
-        Assertions.assertTrue(result.getStatusCode().is4xxClientError());
-        Assertions.assertEquals(result.getBody(), new User(null, null));
-
+        Assertions.assertTrue(result.getStatusCode().is2xxSuccessful());
+        Assertions.assertNull(result.getBody());
     }
 
+    @Test
+    void shouldGetAllUserParam() {
+        //Given
+        String urlCreated = "http://localhost:" + port + "/users";
+        URI uri = UriComponentsBuilder.fromHttpUrl(urlCreated).path("/byName").queryParam("name","Franek").build().toUri();
+        User user1 = new User(1, "Bartek");
+        User user2 = new User(2, "Franek");
+        User user3 = new User(3, "Franek");
+        restTemplate.postForEntity(urlCreated, user1, User.class);
+        restTemplate.postForEntity(urlCreated, user2, User.class);
+        restTemplate.postForEntity(urlCreated, user3, User.class);
+        User[] users = new User[]{user2, user3};
+
+        //When
+        ResponseEntity<User[]> result = restTemplate.getForEntity(uri,User[].class);
+
+        //Then
+        Assertions.assertTrue(result.getStatusCode().is2xxSuccessful());
+        Assertions.assertArrayEquals(result.getBody(), users);
+    }
 }
