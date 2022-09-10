@@ -12,7 +12,7 @@ public class UserController {
     Map<Integer, User> idToUser = new HashMap<>();
 
     @PostMapping("/users") //to do poprawne sciezki do endpoins "/users" we wszystkich endpoints
-    public User addName(@RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         idToUser.put(user.id, user);
         return user;
     }
