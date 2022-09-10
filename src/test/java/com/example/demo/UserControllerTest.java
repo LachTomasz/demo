@@ -60,23 +60,20 @@ class UserControllerTest {
     }
 
     @Test
-    public void shouldGetAllUsers() {
+    public void shouldDeleteUser() {
         //Given
-        String url = "http://localhost:" + port + "/users";
-        User user1 = new User(1, "Michał");
-        User user2 = new User(2, "Tomek");
-        User user3 = new User(3, "Kasia");
-        restTemplate.postForEntity(url, user1, User.class);
-        restTemplate.postForEntity(url, user2, User.class);
-        restTemplate.postForEntity(url, user3, User.class);
-        User[] users = new User[]{user1, user2, user3};
+        String urlCreated = "http://localhost:" + port + "/users";
+        String urlDelete = "http://localhost:" + port + "/users/1";
+        User user1 = new User(1, "Paulina");
+        restTemplate.postForEntity(urlCreated, user1, User.class);
 
         //When
-        ResponseEntity<User[]> result = restTemplate.getForEntity(url, User[].class);
+        ResponseEntity<User> result = restTemplate.exchange(urlDelete, HttpMethod.DELETE, new HttpEntity<>(null), User.class);
+//        restTemplate.delete(urlDelete, user1);
 
         //Then
         Assertions.assertTrue(result.getStatusCode().is2xxSuccessful());
-        Assertions.assertArrayEquals(result.getBody(), users);
+        Assertions.assertNull(result.getBody());
     }
 
     @Test
@@ -97,27 +94,30 @@ class UserControllerTest {
     }
 
     @Test
-    public void shouldDeleteUser() {
+    public void shouldGetAllUsers() {
         //Given
-        String urlCreated = "http://localhost:" + port + "/users";
-        String urlDelete = "http://localhost:" + port + "/users/1";
-        User user1 = new User(1, "Paulina");
-        restTemplate.postForEntity(urlCreated, user1, User.class);
+        String url = "http://localhost:" + port + "/users";
+        User user1 = new User(1, "Michał");
+        User user2 = new User(2, "Tomek");
+        User user3 = new User(3, "Kasia");
+        restTemplate.postForEntity(url, user1, User.class);
+        restTemplate.postForEntity(url, user2, User.class);
+        restTemplate.postForEntity(url, user3, User.class);
+        User[] users = new User[]{user1, user2, user3};
 
         //When
-        ResponseEntity<User> result = restTemplate.exchange(urlDelete, HttpMethod.DELETE, new HttpEntity<>(null), User.class);
-//        restTemplate.delete(urlDelete, user1);
+        ResponseEntity<User[]> result = restTemplate.getForEntity(url, User[].class);
 
         //Then
         Assertions.assertTrue(result.getStatusCode().is2xxSuccessful());
-        Assertions.assertNull(result.getBody());
+        Assertions.assertArrayEquals(result.getBody(), users);
     }
 
     @Test
-    void shouldGetAllUserParam() {
+    void shouldGetAllUserByname() {
         //Given
         String urlCreated = "http://localhost:" + port + "/users";
-        URI uri = UriComponentsBuilder.fromHttpUrl(urlCreated).path("/byName").queryParam("name","Franek").build().toUri();
+        URI uri = UriComponentsBuilder.fromHttpUrl(urlCreated).queryParam("name","Franek").build().toUri();
         User user1 = new User(1, "Bartek");
         User user2 = new User(2, "Franek");
         User user3 = new User(3, "Franek");
