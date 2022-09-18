@@ -13,13 +13,13 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-//import org.springframework.web.bind.annotation.*;
-//
-//import javax.websocket.server.PathParam;
-//import java.lang.reflect.Array;
-//import java.util.*;
-//
-//import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.web.bind.annotation.*;
+
+import javax.websocket.server.PathParam;
+import java.lang.reflect.Array;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
@@ -114,7 +114,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldGetAllUserByname() {
+    void shouldGetAllUserByName() {
         //Given
         String urlCreated = "http://localhost:" + port + "/users";
         URI uri = UriComponentsBuilder.fromHttpUrl(urlCreated).queryParam("name","Franek").build().toUri();
